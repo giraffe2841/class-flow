@@ -1,26 +1,332 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary: #005394;
+  --color-primary-container: #2b6cb0;
+  --color-primary-fixed: #d3e4ff;
+  --color-primary-fixed-dim: #a2c9ff;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #e1ecff;
+  --color-on-primary-fixed: #001c38;
+  --color-on-primary-fixed-variant: #004881;
+  --color-inverse-primary: #a2c9ff;
+
+  --color-secondary: #006d3c;
+  --color-secondary-container: #85f6ad;
+  --color-secondary-fixed: #88f9b0;
+  --color-secondary-fixed-dim: #6bdc96;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #00723f;
+  --color-on-secondary-fixed: #00210f;
+  --color-on-secondary-fixed-variant: #00522c;
+
+  --color-tertiary: #4d5357;
+  --color-tertiary-container: #656b6f;
+  --color-tertiary-fixed: #dee3e8;
+  --color-tertiary-fixed-dim: #c2c7cc;
+  --color-on-tertiary: #ffffff;
+  --color-on-tertiary-container: #e7ecf1;
+  --color-on-tertiary-fixed: #171c20;
+  --color-on-tertiary-fixed-variant: #42474c;
+
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #93000a;
+
+  --color-surface: #f8f9ff;
+  --color-surface-dim: #d9dae0;
+  --color-surface-bright: #f8f9ff;
+  --color-surface-variant: #e1e2e8;
+  --color-surface-tint: #1960a3;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f2f3fa;
+  --color-surface-container: #ededf4;
+  --color-surface-container-high: #e7e8ee;
+  --color-surface-container-highest: #e1e2e8;
+
+  --color-on-surface: #191c20;
+  --color-on-surface-variant: #414750;
+  --color-inverse-surface: #2e3035;
+  --color-inverse-on-surface: #eff0f7;
+
+  --color-outline: #727782;
+  --color-outline-variant: #c1c7d2;
+  --color-background: #f8f9ff;
+  --color-on-background: #191c20;
+
+  --font-headline: Manrope, sans-serif;
+  --font-body: "Public Sans", Arial, sans-serif;
+  --font-label: "Public Sans", Arial, sans-serif;
+
+  --border-radius-DEFAULT: 0.25rem;
+  --border-radius-lg: 0.5rem;
+  --border-radius-xl: 0.75rem;
+  --border-radius-2xl: 1.5rem;
+  --border-radius-full: 9999px;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #f8f9ff;
+  --foreground: #191c20;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Public Sans', Arial, sans-serif;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Manrope', sans-serif;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+}
+
+/* ============================================
+   School Grade Selector
+   ============================================ */
+
+/* 1. 학교급 선택 카드 (중학교 / 고등학교) */
+.school-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-width: 160px;
+  min-height: 120px;
+  padding: 1.5rem 2rem;
+  border-radius: var(--border-radius-2xl);
+  border: 2px solid var(--color-outline-variant);
+  background: var(--color-surface-container-lowest);
+  color: var(--color-on-surface-variant);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.school-card:hover {
+  border-color: var(--color-primary-fixed-dim);
+  background: var(--color-primary-fixed);
+  color: var(--color-on-primary-fixed);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 83, 148, 0.1);
+}
+
+.school-card[data-selected="true"] {
+  border-color: var(--color-primary);
+  background: var(--color-primary-fixed);
+  color: var(--color-on-primary-fixed);
+  box-shadow: 0 0 0 3px rgba(0, 83, 148, 0.15);
+}
+
+.school-card[data-selected="true"] .school-card__icon {
+  color: var(--color-primary);
+}
+
+.school-card__icon {
+  font-size: 2rem;
+  color: var(--color-on-surface-variant);
+  transition: color 0.2s ease;
+}
+
+.school-card__label {
+  font-family: var(--font-headline);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+/* 2. 학년 선택 pill 버튼 */
+.grade-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1.5rem;
+  border-radius: var(--border-radius-full);
+  border: 1.5px solid var(--color-outline-variant);
+  background: var(--color-surface-container-lowest);
+  color: var(--color-on-surface-variant);
+  font-family: var(--font-label);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.grade-btn:hover {
+  border-color: var(--color-primary-fixed-dim);
+  background: var(--color-primary-fixed);
+  color: var(--color-on-primary-fixed);
+}
+
+.grade-btn[data-selected="true"] {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  box-shadow: 0 2px 8px rgba(0, 83, 148, 0.25);
+}
+
+/* 3. 과목 카드 */
+.subject-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .subject-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.subject-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--border-radius-xl);
+  border: 1.5px solid var(--color-outline-variant);
+  background: var(--color-surface-container-lowest);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  position: relative;
+}
+
+.subject-card:hover {
+  border-color: var(--color-primary-fixed-dim);
+  background: var(--color-surface-container-low);
+  transform: translateY(-1px);
+}
+
+.subject-card[data-selected="true"] {
+  border-color: var(--color-primary);
+  background: var(--color-primary-fixed);
+  box-shadow: 0 0 0 3px rgba(0, 83, 148, 0.12);
+}
+
+.subject-card__name {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-on-surface);
+}
+
+.subject-card[data-selected="true"] .subject-card__name {
+  color: var(--color-on-primary-fixed);
+}
+
+.subject-card__category {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--border-radius-full);
+  background: var(--color-surface-container-high);
+  color: var(--color-on-surface-variant);
+  font-family: var(--font-label);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  width: fit-content;
+}
+
+.subject-card[data-selected="true"] .subject-card__category {
+  background: rgba(0, 83, 148, 0.12);
+  color: var(--color-on-primary-fixed-variant);
+}
+
+.subject-card__required {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--border-radius-full);
+  background: var(--color-secondary);
+  color: var(--color-on-secondary);
+  font-family: var(--font-label);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* 4. 로딩 스피너 */
+.subject-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.subject-loading__spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid var(--color-surface-container-high);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: subject-spin 0.7s linear infinite;
+}
+
+@keyframes subject-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 5. 단계 전환 fade-in 애니메이션 */
+.step-fade-in {
+  animation: stepFadeIn 0.3s ease-out both;
+}
+
+@keyframes stepFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 6. 반별 리포트 인쇄 스타일 */
+@media print {
+  /* 사이드바·탑바·AI 버튼 등 UI 숨김 */
+  aside,
+  nav,
+  header,
+  [data-print-hide],
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* 인쇄 배경 및 레이아웃 */
+  body {
+    background: white !important;
+    font-size: 12pt;
+  }
+
+  /* 메인 콘텐츠 풀 너비 */
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  /* 페이지 여백 */
+  @page {
+    margin: 1.5cm 2cm;
+    size: A4;
+  }
+
+  /* 단원 카드가 페이지 중간에 잘리지 않도록 */
+  .print\:break-inside-avoid {
+    break-inside: avoid;
+  }
 }
