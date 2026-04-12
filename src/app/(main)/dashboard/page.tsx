@@ -148,7 +148,7 @@ export default function DashboardPage() {
 
   return (
     <>
-      <TopNav title="대시보드" />
+      <TopNav />
 
       <div className="p-4 lg:p-8 space-y-6">
         {/* 상단 인사말 */}
