@@ -335,7 +335,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 pt-12 border-t border-white/10 flex flex-col md:flex-row justify-between gap-8 items-center text-[10px] text-[#6B7280] font-bold uppercase tracking-widest">
           <span>© 2026 ClassFlow. All rights reserved.</span>
           <div className="flex gap-10">
-            <a href="#" className="hover:text-white transition-colors">개인정보처리방침</a>
+            <a href="/privacy" className="hover:text-white transition-colors">개인정보처리방침</a>
             <a href="/terms" className="hover:text-white transition-colors">이용약관</a>
           </div>
         </div>
