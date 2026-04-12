@@ -178,6 +178,16 @@ export default function TopNav({ title }: { title?: string }) {
   return (
     <header className="flex justify-between items-center w-full px-8 py-4 sticky top-0 z-40 bg-white/80 backdrop-blur-md shadow-sm shadow-slate-200/50">
       <div className="flex items-center gap-4 flex-1">
+        <Link href="/dashboard" className="flex items-center gap-2 shrink-0 mr-2">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white" style={{ background: 'linear-gradient(135deg, #0052FF, #2b6cb0)' }}>
+            <svg viewBox="0 0 32 32" fill="none" className="w-5 h-5">
+              <path d="M5 9C5 7.89543 5.89543 7 7 7H25C26.1046 7 27 7.89543 27 9V11H5V9Z" fill="white" opacity="0.95"/>
+              <rect x="5" y="14" width="22" height="3" rx="1.5" fill="white" opacity="0.75"/>
+              <rect x="5" y="20" width="15" height="3" rx="1.5" fill="white" opacity="0.55"/>
+            </svg>
+          </div>
+          <span className="text-base font-bold tracking-tight text-slate-800">ClassFlow</span>
+        </Link>
         {title && <h2 className="text-lg font-bold text-slate-800 shrink-0">{title}</h2>}
         <div className="relative max-w-md w-full">
           <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
