@@ -4,8 +4,6 @@ import { createClient } from '@/lib/supabase/server'
 import { canUseAiChat, canUseAiTokens } from '@/lib/plan'
 import type { Plan } from '@/lib/constants'
 
-const openai = new OpenAI({ apiKey: process.env.GROQ_API_KEY, baseURL: 'https://api.groq.com/openai/v1' })
-
 const SYSTEM_PROMPT = `당신은 선생님의 수업 진도 관리와 수업 계획을 돕는 AI 어시스턴트입니다.
 진도 계획 조언, 밀린 진도 따라잡기, 단원별 수업 전략, 시험 범위 조정, 수업 자료 분석에 대한 질문에 답변하세요.
 한국어로 친절하고 전문적으로 답변하세요.`
@@ -66,6 +64,8 @@ export async function POST(req: NextRequest) {
 
   let inputTokens = 0
   let outputTokens = 0
+
+  const openai = new OpenAI({ apiKey: process.env.GROQ_API_KEY, baseURL: 'https://api.groq.com/openai/v1' })
 
   const stream = await openai.chat.completions.create({
     model: 'llama-3.3-70b-versatile',
