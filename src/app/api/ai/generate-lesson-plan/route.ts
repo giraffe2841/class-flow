@@ -4,8 +4,6 @@ import { createClient } from '@/lib/supabase/server'
 import { canUseAiChat, canUseAiTokens } from '@/lib/plan'
 import type { Plan } from '@/lib/constants'
 
-const openai = new OpenAI({ apiKey: process.env.GROQ_API_KEY, baseURL: 'https://api.groq.com/openai/v1' })
-
 const LESSON_PLAN_SYSTEM = `당신은 대한민국 초·중·고등학교 선생님의 수업 계획을 전문적으로 작성하는 AI입니다.
 업로드된 학습 자료(학습지, PDF, Word 문서 등)를 분석하여 체계적이고 실용적인 수업 계획을 작성하세요.
 항상 한국어로 작성하고, 교육 현장에서 바로 활용할 수 있도록 구체적으로 작성하세요.`
@@ -82,6 +80,7 @@ ${fileText ? `학습 자료 내용:\n${fileText.slice(0, 4000)}` : '(파일 내�
   "notes": "선생님을 위한 추가 노트"
 }`
 
+  const openai = new OpenAI({ apiKey: process.env.GROQ_API_KEY, baseURL: 'https://api.groq.com/openai/v1' })
   const response = await openai.chat.completions.create({
     model: 'llama-3.3-70b-versatile',
     messages: [

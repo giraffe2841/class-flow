@@ -4,8 +4,6 @@ import { createClient } from '@/lib/supabase/server'
 import { canUseAiReplan } from '@/lib/plan'
 import type { Plan } from '@/lib/constants'
 
-const openai = new OpenAI({ apiKey: process.env.GROQ_API_KEY, baseURL: 'https://api.groq.com/openai/v1' })
-
 export async function POST(req: NextRequest) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -42,6 +40,7 @@ ${units.map((u: { title: string; lessons: string[] }) => `- ${u.title}: ${u.less
 형식: { "plan": [ { "date": "YYYY-MM-DD", "lesson": "단원 - 차시명", "class": "반 이름" } ] }
 한국어로 답변하고, JSON 외 다른 텍스트는 포함하지 마세요.`
 
+  const openai = new OpenAI({ apiKey: process.env.GROQ_API_KEY, baseURL: 'https://api.groq.com/openai/v1' })
   const response = await openai.chat.completions.create({
     model: 'llama-3.3-70b-versatile',
     messages: [{ role: 'user', content: prompt }],
