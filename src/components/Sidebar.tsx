@@ -77,7 +77,14 @@ export default function Sidebar() {
       </div>
 
       <div className="mt-auto p-4 border-t border-slate-100 space-y-1">
-        <Link href="#" className="flex items-center gap-3 px-4 py-2 text-slate-500 hover:text-slate-900 transition-colors rounded-xl">
+        <Link
+          href="/settings"
+          className={`flex items-center gap-3 px-4 py-2 transition-colors rounded-xl ${
+            pathname.startsWith('/settings')
+              ? 'text-[#005394] font-semibold bg-white shadow-sm'
+              : 'text-slate-500 hover:text-slate-900'
+          }`}
+        >
           <span className="material-symbols-outlined text-xl">settings</span>
           <span className="text-sm">설정</span>
         </Link>

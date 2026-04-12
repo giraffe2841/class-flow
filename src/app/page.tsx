@@ -1,301 +1,345 @@
-import Link from 'next/link'
+'use client'
+
+import { useEffect, useRef } from 'react'
+import DashboardMockup from '@/components/DashboardMockup'
 
 export default function LandingPage() {
+  const stageRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!stageRef.current) return
+      const x = (window.innerWidth / 2 - e.pageX) / 50
+      const y = (window.innerHeight / 2 - e.pageY) / 50
+      stageRef.current.style.transform = `rotateX(${15 + y}deg) rotateY(${-10 + x}deg)`
+    }
+    document.addEventListener('mousemove', handleMouseMove)
+    return () => document.removeEventListener('mousemove', handleMouseMove)
+  }, [])
+
   return (
-    <div className="bg-surface text-on-surface font-body antialiased">
-      {/* TopNavBar */}
-      <nav className="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md shadow-sm">
-        <div className="flex justify-between items-center max-w-7xl mx-auto px-8 py-4">
-          <div className="text-xl font-bold tracking-tighter text-on-surface font-headline">
-            클래스플로우
+    <>
+      <style>{`
+        body { background-color: white; letter-spacing: -0.02em; }
+        .perspective-stage { perspective: 2000px; }
+        .m-3d-card {
+          transform-style: preserve-3d;
+          transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+          transform: rotateX(15deg) rotateY(-10deg);
+        }
+        .m-3d-layer {
+          position: absolute;
+          backface-visibility: hidden;
+          box-shadow: 0 20px 50px -10px rgba(0,0,0,0.1);
+        }
+        .float-3d { animation: float3d 6s ease-in-out infinite; }
+        @keyframes float3d {
+          0%, 100% { transform: translateZ(80px) translateY(0); }
+          50% { transform: translateZ(80px) translateY(-10px); }
+        }
+        .float-3d-delayed {
+          animation: float3d-delayed 6s ease-in-out infinite;
+          animation-delay: -3s;
+        }
+        @keyframes float3d-delayed {
+          0%, 100% { transform: translateZ(120px) translateY(0); }
+          50% { transform: translateZ(120px) translateY(-10px); }
+        }
+        .glass-ui {
+          background: rgba(255, 255, 255, 0.8);
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+      `}</style>
+
+      {/* Navigation */}
+      <nav className="sticky top-0 z-[100] bg-white/80 backdrop-blur-md border-b border-[#E5E7EB]">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
+          <div className="flex items-center gap-10">
+            <div className="text-xl font-bold tracking-tighter">ClassFlow</div>
+            <div className="hidden md:flex gap-8 text-[13px] font-medium text-[#6B7280]">
+              <a href="#features" className="hover:text-[#0052FF] transition-colors">기능 소개</a>
+              <a href="#pricing" className="hover:text-[#0052FF] transition-colors">요금제</a>
+              <a href="#" className="hover:text-[#0052FF] transition-colors">리소스</a>
+              <a href="#pricing" className="hover:text-[#0052FF] transition-colors">가격</a>
+            </div>
           </div>
-          <div className="hidden md:flex items-center space-x-8 font-headline text-sm font-semibold tracking-tight">
-            <a className="text-primary border-b-2 border-primary pb-1" href="#">대시보드</a>
-            <a className="text-on-surface-variant hover:text-primary transition-all duration-300" href="#">기능소개</a>
-            <a className="text-on-surface-variant hover:text-primary transition-all duration-300" href="#">요금제</a>
-            <a className="text-on-surface-variant hover:text-primary transition-all duration-300" href="#">커뮤니티</a>
-          </div>
-          <div className="flex items-center space-x-4">
-            <Link href="/login" className="px-5 py-2 text-sm font-semibold text-primary hover:opacity-80 transition-all">
-              로그인
-            </Link>
-            <Link
-              href="/signup"
-              className="bg-gradient-to-br from-primary to-primary-container text-on-primary px-6 py-2 rounded-xl text-sm font-semibold shadow-md hover:opacity-90 active:scale-95 transition-all duration-200"
-            >
-              무료로 시작하기
-            </Link>
+          <div className="flex items-center gap-4">
+            <a href="/login" className="text-[13px] font-medium px-4 hover:text-[#0052FF] transition-colors">로그인</a>
+            <a href="/signup" className="bg-[#0052FF] text-white px-5 py-2 rounded-lg text-[13px] font-semibold hover:bg-blue-700 transition-all">시작하기</a>
           </div>
         </div>
       </nav>
 
-      <main className="pt-24">
+      <main>
         {/* Hero Section */}
-        <section className="relative px-8 pt-16 pb-24 overflow-hidden">
-          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="z-10">
-              
-              <h1 className="text-5xl md:text-6xl font-bold font-headline text-on-surface leading-[1.2] mb-6 tracking-tight">
-                AI로 정교해지는 학업 계획의 미학,{' '}
-                <span className="text-primary italic">클래스플로우</span>
-              </h1>
-              <p className="text-lg text-on-surface-variant leading-relaxed mb-10 max-w-xl">
-                선생님의 수업 흐름을 이해하는 인공지능 배정 캘린더. 학기 일정을 입력하면 AI가 최적의 진도표를 실시간으로 설계합니다. 번거로운 관리는 AI에 맡기고 학생들에게 더 집중하세요.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  href="/signup"
-                  className="bg-gradient-to-br from-primary to-primary-container text-on-primary px-8 py-4 rounded-2xl font-bold text-lg shadow-xl shadow-primary/20 hover:opacity-90 active:scale-95 transition-all duration-200 text-center"
-                >
-                  지금 무료로 체험하기
-                </Link>
-                <button className="bg-surface-container-high text-primary px-8 py-4 rounded-2xl font-bold text-lg hover:bg-surface-container-highest transition-all">
-                  데모 영상 보기
+        <section className="pt-24 pb-32 px-6 overflow-hidden bg-[#F9FAFB]">
+          <div className="max-w-4xl mx-auto text-center mb-20">
+            <h1 className="text-6xl md:text-7xl font-bold tracking-tight mb-8">
+              Powerful planning.<br /><span className="text-[#6B7280] opacity-40">Simplified classes.</span>
+            </h1>
+            <p className="text-xl text-[#6B7280] max-w-2xl mx-auto mb-10">
+              선생님의 시간을 가치 있게. AI 진도관리 클래스플로우와 함께 10분 만에 한 학기 학업 계획을 디자인하세요.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-3">
+              <input
+                type="email"
+                placeholder="업무용 이메일을 입력하세요"
+                className="px-5 py-3 w-80 rounded-lg border border-[#E5E7EB] focus:ring-1 focus:ring-[#0052FF] focus:border-[#0052FF] outline-none transition-all"
+              />
+              <a href="/signup" className="bg-[#0052FF] text-white px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition-all">무료로 시작하기</a>
+            </div>
+          </div>
+
+          {/* 3D Mockup Stage */}
+          <div className="max-w-6xl mx-auto perspective-stage relative h-[500px] md:h-[700px]">
+            <div className="m-3d-card relative w-full h-full" ref={stageRef}>
+              {/* Main App Window */}
+              <div className="m-3d-layer w-full h-full bg-white rounded-xl border border-[#E5E7EB] p-2 overflow-hidden shadow-2xl">
+                <DashboardMockup />
+              </div>
+
+              {/* Floating Card - Right */}
+              <div className="m-3d-layer float-3d top-20 -right-12 w-64 glass-ui p-6 rounded-xl shadow-2xl">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-green-600 text-[20px]">check_circle</span>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-[#6B7280] uppercase tracking-widest">AI Success</p>
+                    <p className="text-sm font-bold">진도율 98.4%</p>
+                  </div>
+                </div>
+                <div className="h-1 w-full bg-gray-100 rounded-full overflow-hidden">
+                  <div className="h-full w-[98%] bg-green-500" />
+                </div>
+              </div>
+
+              {/* Floating Card - Left */}
+              <div className="m-3d-layer float-3d-delayed bottom-20 -left-12 w-72 glass-ui p-6 rounded-xl shadow-2xl">
+                <div className="flex gap-3 mb-2 text-[#0052FF]">
+                  <span className="material-symbols-outlined text-[20px]">auto_awesome</span>
+                  <span className="text-sm font-bold">AI 최적화 완료</span>
+                </div>
+                <p className="text-[12px] text-[#6B7280] leading-relaxed">"수요일 2교시 수업을 위해 15분 복습 세션이 자동으로 배정되었습니다."</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Logo Bar */}
+        <section className="py-20 border-b border-[#E5E7EB]">
+          <div className="max-w-7xl mx-auto px-6">
+            <p className="text-center text-[12px] font-bold text-[#6B7280] tracking-[0.2em] uppercase mb-12 opacity-50">Trusted by Leading Educators</p>
+            <div className="flex flex-wrap justify-center items-center gap-x-20 gap-y-10 grayscale opacity-40 font-bold italic text-2xl">
+              <span>SEOUL UNIV.</span>
+              <span>EDU-KOREA</span>
+              <span>TEACHERS LAB</span>
+              <span>GLOBAL ACADEMY</span>
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section id="features" className="py-32 px-6">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-24 items-center">
+            <div>
+              <h2 className="text-4xl font-bold tracking-tight mb-8 leading-tight">AI 지능형 재계획.<br />수업의 유연함을 더하다.</h2>
+              <div className="space-y-8">
+                <p className="text-lg text-[#6B7280] leading-relaxed">
+                  갑작스러운 학교 행사나 휴업일 때문에 당황하지 마세요. 클래스플로우 AI가 누락된 수업을 즉시 재배치하여 전체 일정을 최적화합니다.
+                </p>
+                <ul className="space-y-4">
+                  <li className="flex items-start gap-3">
+                    <span className="material-symbols-outlined text-[#0052FF]">arrow_forward</span>
+                    <span className="text-sm font-medium">시험범위 역산 로드맵 도구</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="material-symbols-outlined text-[#0052FF]">arrow_forward</span>
+                    <span className="text-sm font-medium">단원별 난이도 가중치 시스템</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="material-symbols-outlined text-[#0052FF]">arrow_forward</span>
+                    <span className="text-sm font-medium">구글 클래스룸 연동 자동 동기화</span>
+                  </li>
+                </ul>
+                <button className="text-[#0052FF] font-semibold flex items-center gap-2 hover:gap-3 transition-all">
+                  Explore Re-planning <span className="material-symbols-outlined">east</span>
                 </button>
               </div>
             </div>
-
-            <div className="relative">
-              <div className="absolute -top-20 -right-20 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-              <div className="absolute -bottom-10 -left-10 w-72 h-72 bg-secondary/10 rounded-full blur-3xl" />
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-outline-variant/15" style={{ background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(20px)' }}>
-                <img
-                  alt="대시보드 미리보기"
-                  className="w-full object-cover aspect-[4/3]"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDH9_w-i6Jm9_QiglqQJD83kOjbnzYpULV-kCIv9t2J6bN2baaHDmi105_4Ebpzy7kk00jMENcoVhaWwdeyOJw1BuLhFgjwYkQZXxal9H_xgoMCccH-nmIpJsEEPoLzerLYugRlli36C3m9iRjBNvieW_Uy3ziaTCMsZ1veLi6L7-P3qD9UaTl8r2pMCowriWmPksCtnAGNzk9wiPiQ-NdOjXe3iCeGIfkg5m0hWtmewFzYM0zmiGFfF1Q2Oa2lzR4d0oCQGdcBBuQ"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-surface/20 to-transparent" />
+            <div className="bg-[#F9FAFB] rounded-2xl p-8 border border-[#E5E7EB] shadow-sm group hover:shadow-xl transition-all">
+              <div className="bg-white rounded-xl border border-[#E5E7EB] p-4 shadow-inner">
+                <div className="flex justify-between items-center pb-4 border-b border-[#E5E7EB] mb-4">
+                  <span className="font-bold">2학기 수학 II 커리큘럼</span>
+                  <span className="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded-full">AI 최적화 완료</span>
+                </div>
+                <div className="space-y-3 opacity-60">
+                  <div className="p-3 bg-[#F9FAFB] rounded-lg border border-[#E5E7EB] flex justify-between text-sm">
+                    <span>1단원: 함수의 극한</span>
+                    <span className="font-bold text-[#0052FF]">완료</span>
+                  </div>
+                  <div className="p-3 bg-white rounded-lg border-2 border-[#0052FF] flex justify-between text-sm shadow-lg -translate-y-1">
+                    <span>2단원: 다항함수의 미분</span>
+                    <span className="font-bold text-[#0052FF]">진행 중</span>
+                  </div>
+                  <div className="p-3 bg-[#F9FAFB] rounded-lg border border-[#E5E7EB] flex justify-between text-sm">
+                    <span>3단원: 다항함수의 적분</span>
+                    <span className="font-bold">D-12</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Features Bento Grid */}
-        <section className="py-24 px-8 bg-surface-container-low">
+        {/* Pricing Section */}
+        <section id="pricing" className="py-32 px-6 bg-[#F9FAFB]">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold font-headline text-on-surface mb-4">교육자를 위한 지능형 인프라</h2>
-              <p className="text-on-surface-variant max-w-2xl mx-auto">복잡한 교육과정 관리를 AI가 자동화하고 고도화합니다.</p>
+            <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+              <div>
+                <p className="text-[12px] font-bold text-[#0052FF] uppercase tracking-widest mb-3">Pricing</p>
+                <h2 className="text-4xl font-bold tracking-tight">선생님을 위한 합리적인 요금제</h2>
+                <p className="text-[#6B7280] mt-2">개인 교사부터 학교 단위까지, 규모에 맞게 시작하세요</p>
+              </div>
+              <div className="flex items-center gap-2 bg-white p-1 rounded-lg border border-[#E5E7EB]">
+                <button className="px-4 py-2 text-[12px] font-bold bg-[#F9FAFB] rounded-md">월간 결제</button>
+                <button className="px-4 py-2 text-[12px] font-bold text-[#6B7280]">연간 결제 <span className="text-[#0052FF]">15% 할인</span></button>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* 스마트 대시보드 */}
-              <div className="md:col-span-2 bg-surface-container-lowest p-8 rounded-2xl flex flex-col justify-between group transition-all hover:-translate-y-1">
+              {/* Free */}
+              <div className="bg-white p-10 rounded-2xl border border-[#E5E7EB] flex flex-col justify-between hover:shadow-xl transition-all">
                 <div>
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-6">
-                    <span className="material-symbols-outlined">dashboard</span>
+                  <p className="text-[12px] font-bold text-[#6B7280] uppercase tracking-widest mb-4">Free</p>
+                  <div className="mb-2">
+                    <h3 className="text-4xl font-bold">₩0</h3>
+                    <span className="text-sm text-[#6B7280]">영원히 무료</span>
                   </div>
-                  <h3 className="text-2xl font-bold font-headline mb-4">스마트 대시보드</h3>
-                  <p className="text-on-surface-variant leading-relaxed max-w-md">
-                    한 학기 전체의 흐름을 한눈에 파악하세요. 실시간 진도 대시보드가 각 학급별 진도 차이를 분석하고 보완이 필요한 부분을 즉시 알려드립니다.
-                  </p>
+                  <p className="text-[13px] text-[#6B7280] mb-8 leading-relaxed">ClassFlow를 처음 시작하는 선생님을 위한 플랜</p>
+                  <ul className="space-y-3 mb-12">
+                    {[
+                      '반 1개',
+                      '교과 1개',
+                      '학습지 3개',
+                      'AI 채팅 월 10,000 토큰',
+                    ].map(item => (
+                      <li key={item} className="flex items-center gap-3 text-sm text-[#6B7280]">
+                        <span className="material-symbols-outlined text-[16px] text-[#D1D5DB]">check</span> {item}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <div className="mt-8 rounded-xl overflow-hidden bg-surface-container h-48 relative">
-                  <img
-                    alt="스마트 대시보드 데이터"
-                    className="w-full h-full object-cover mix-blend-multiply opacity-50"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFmQC6Y6Yicchv1A-WOGaqn8WQwTj-oidYLpZpR9PTlax1i_vJXs_8sT3YAIrhj6Rww_TMmABGXhZCz6TnwXDBa04xE7ZjJBvllkKtN7AcKem989ZDBTp24zq6KiY7-DsPwJiLUS4VoMlOlBZqMq9_gG2oQGMSLqJ3KXxFEgijkIqZ45odxYI-zcgxYiOFvvHiZCyRL_ubYcnt1qgP8erW88iUHNYKQo35FIX7-fD8Ezrn0NgBEZBFWuizhBLUgZ1clNOYABVJj_A"
-                  />
-                </div>
+                <a href="/signup" className="block w-full py-3 text-center border border-[#E5E7EB] rounded-lg font-bold text-sm hover:bg-[#F9FAFB] transition-colors">무료로 시작하기</a>
               </div>
 
-              {/* AI 재계획 */}
-              <div className="bg-gradient-to-br from-secondary to-secondary-container/80 p-8 rounded-2xl text-on-secondary flex flex-col justify-between transition-all hover:-translate-y-1">
+              {/* Pro */}
+              <div className="bg-white p-10 rounded-2xl border-2 border-[#0052FF] flex flex-col justify-between shadow-2xl relative">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#0052FF] text-white px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">Most Popular</div>
                 <div>
-                  <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center text-white mb-6">
-                    <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>autorenew</span>
+                  <p className="text-[12px] font-bold text-[#0052FF] uppercase tracking-widest mb-4">Pro</p>
+                  <div className="mb-2">
+                    <h3 className="text-4xl font-bold">₩3,900</h3>
+                    <span className="text-sm text-[#6B7280]">/월</span>
                   </div>
-                  <h3 className="text-2xl font-bold font-headline mb-4">AI 지능형 재계획</h3>
-                  <p className="text-white/90 leading-relaxed">
-                    갑작스러운 학교 행사나 휴업일 때문에 당황하지 마세요. AI가 누락된 수업을 즉시 재배치하여 수동 입력 없이도 전체 일정을 최적화합니다.
-                  </p>
+                  <p className="text-[13px] text-[#6B7280] mb-8 leading-relaxed">AI 기능을 풀로 활용하는 교사를 위한 핵심 플랜</p>
+                  <ul className="space-y-3 mb-12">
+                    {[
+                      '반 5개',
+                      '교과 3개',
+                      'AI 재계획 월 20회',
+                      '시험범위 역산',
+                      '학습지 50개',
+                      '진도 미달 알림',
+                      'AI 채팅 월 50,000 토큰',
+                    ].map(item => (
+                      <li key={item} className="flex items-center gap-3 text-sm">
+                        <span className="material-symbols-outlined text-[16px] text-[#0052FF]">check</span> {item}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <div className="mt-8 flex justify-end opacity-20">
-                  <span className="material-symbols-outlined text-[120px] text-white">calendar_month</span>
-                </div>
+                <a href="/signup" className="block w-full py-3 text-center bg-[#0052FF] text-white rounded-lg font-bold text-sm hover:opacity-90 transition-all">무료로 시작하기</a>
               </div>
 
-              {/* 시험범위 역산 */}
-              <div className="bg-surface-container-lowest p-8 rounded-2xl flex flex-col transition-all hover:-translate-y-1">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-6">
-                  <span className="material-symbols-outlined">event_repeat</span>
-                </div>
-                <h3 className="text-2xl font-bold font-headline mb-4">시험범위 역산 로드맵</h3>
-                <p className="text-on-surface-variant leading-relaxed mb-6">
-                  시험 날짜만 입력하세요. 클래스플로우가 교육과정을 역산하여 자동으로 복습 기간과 예비일을 할당합니다.
-                </p>
-                <div className="mt-auto bg-surface p-4 rounded-xl border border-outline-variant/15">
-                  <div className="flex items-center gap-3 text-xs font-bold text-primary tracking-widest uppercase">
-                    <span className="material-symbols-outlined text-sm">flag</span> 목표 시험일
+              {/* Premium */}
+              <div className="bg-white p-10 rounded-2xl border border-[#E5E7EB] flex flex-col justify-between hover:shadow-xl transition-all">
+                <div>
+                  <p className="text-[12px] font-bold text-[#6B7280] uppercase tracking-widest mb-4">Premium</p>
+                  <div className="mb-2">
+                    <h3 className="text-4xl font-bold">₩7,900</h3>
+                    <span className="text-sm text-[#6B7280]">/월</span>
                   </div>
-                  <div className="text-lg font-bold text-on-surface mt-1">2026년 6월 14일</div>
+                  <p className="text-[13px] text-[#6B7280] mb-8 leading-relaxed">제한 없이 모든 기능을 사용하는 파워 유저 플랜</p>
+                  <ul className="space-y-3 mb-12">
+                    {[
+                      '반 · 교과 무제한',
+                      'AI 재계획 무제한',
+                      '학습지 무제한',
+                      'AI 채팅 월 100,000 토큰',
+                      '우선 고객지원',
+                    ].map(item => (
+                      <li key={item} className="flex items-center gap-3 text-sm text-[#6B7280]">
+                        <span className="material-symbols-outlined text-[16px] text-green-500">check</span> {item}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              </div>
-
-              {/* 교과 전문가 섹션 */}
-              <div className="md:col-span-2 bg-surface-container p-8 rounded-2xl flex items-center gap-8 overflow-hidden relative">
-                <div className="flex-1">
-                  <h3 className="text-2xl font-bold font-headline mb-4 text-on-surface">교과 전문가를 위한 맞춤 설계</h3>
-                  <p className="text-on-surface-variant leading-relaxed">
-                    중·고등학교 선생님들은 여러 학급의 복잡한 진도를 관리해야 합니다. 클래스플로우는 교과별 전문성을 고려하여 중등 교육 현장의 특수한 과제들을 해결하도록 최적화되었습니다.
-                  </p>
-                </div>
-                <div className="hidden sm:block w-1/3">
-                  <img
-                    alt="선생님 협업"
-                    className="rounded-xl object-cover aspect-square shadow-lg"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbaEuMW5Pu9HePLvKybN4VlBTy9QYh_a049KIUtIycbqoSkvvq9we48-vvFCnqOD_jvX1ikpfgtzeKEu3-B2dUfsqYfteLp5HbmtxsITtrxEBncuNS1dPMf0t5Gh6XA7uUNChFV4mvdR35gWWvJEoEulHrsJj-RBIbZ3r_DfDXWcLRIN-7xqqwgYqdjqqcFvWB3Wq5tXv8dxqhJGjs8AjIj2BJo4DABpoHJUrpOwUudVobuIIwvH1kUD3D_pMXbl1GdnjykNhv68g"
-                  />
-                </div>
+                <a href="/signup" className="block w-full py-3 text-center border border-black text-black rounded-lg font-bold text-sm hover:bg-black hover:text-white transition-all">시작하기</a>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Testimonial Section */}
-        <section className="py-24 px-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="relative bg-surface-container-lowest p-12 rounded-2xl text-center shadow-sm">
-              <span className="material-symbols-outlined text-primary/20 text-7xl absolute top-8 left-8">format_quote</span>
-              <p className="text-xl md:text-2xl font-headline italic font-semibold text-on-surface leading-snug mb-8 relative z-10">
-                &ldquo;클래스플로우는 제 생물 수업 진도 관리를 완전히 바꿔놓았습니다. 예전에는 수동으로 달력을 수정하는 데 몇 시간씩 걸렸는데, 이제는 AI 재계획 기능으로 몇 초면 충분합니다. 선생님들에게 꼭 필요한 안식처 같은 도구입니다.&rdquo;
-              </p>
-              <div className="flex flex-col items-center">
-                <div className="w-16 h-16 rounded-full bg-primary-fixed mb-4 overflow-hidden">
-                  <img
-                    alt="선생님 프로필"
-                    className="w-full h-full object-cover"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBLFoPeloO2dhr7OBLaD9vos-ZD7KTHTBrNb5B7BrhOvCzHaih3YxepYydMJQGtxZtbj7mLswrF3r5x5uMHe72K0QrXBtRMhADaPO6cxJwjpqy3KQ_-Q6090pM_bg1aeMoveON6xJeVQil7OXOrIa3iL5VeZXZqCMeiVPUSU_BdWI11kxFFx4rw3YVwcyjl8hc_6U290p2Mbm3QEF9B8Ym2V3H2KDX2CsutRsR2DkrpD6yEHn0i5HGxSLuSdglm2sdfsqWBfq0vPmUw"
-                  />
-                </div>
-                <h4 className="font-bold text-on-surface">김지혜 선생님</h4>
-                <p className="text-sm text-on-surface-variant">현직 고등학교 과학 교사, 교육청 선도 교사</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Pricing / CTA Section */}
-        <section className="py-24 px-8 bg-surface-container-low">
-          <div className="max-w-7xl mx-auto text-center">
-            <h2 className="text-4xl font-bold font-headline mb-6">완벽한 수업의 흐름을 찾으셨나요?</h2>
-            <p className="text-on-surface-variant mb-16 max-w-xl mx-auto">
-              수천 명의 선생님들과 함께 계획 업무 시간을 단축해 보세요. 필요에 맞는 요금제를 선택하세요.
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto mb-16">
-              {/* 베이직 */}
-              <div className="bg-surface-container-lowest p-8 rounded-2xl flex flex-col">
-                <div className="text-sm font-bold text-primary tracking-widest uppercase mb-4">베이직</div>
-                <div className="text-3xl font-bold mb-6">₩0 <span className="text-sm text-on-surface-variant font-normal">/ 월</span></div>
-                <ul className="text-left space-y-4 mb-8 flex-1">
-                  <li className="flex items-center gap-2 text-sm text-on-surface-variant">
-                    <span className="material-symbols-outlined text-secondary text-lg">check_circle</span> 1개 활성 학급 관리
-                  </li>
-                  <li className="flex items-center gap-2 text-sm text-on-surface-variant">
-                    <span className="material-symbols-outlined text-secondary text-lg">check_circle</span> 수동 진도 조정
-                  </li>
-                  <li className="flex items-center gap-2 text-sm text-on-surface-variant">
-                    <span className="material-symbols-outlined text-secondary text-lg">check_circle</span> 기본 교과 템플릿 제공
-                  </li>
-                </ul>
-                <Link
-                  href="/signup"
-                  className="w-full py-3 rounded-xl border border-outline-variant/30 font-bold hover:bg-surface-container transition-all text-center block"
-                >
-                  무료로 가입하기
-                </Link>
-              </div>
-
-              {/* 프로 */}
-              <div className="bg-surface-container-lowest p-8 rounded-2xl flex flex-col relative ring-2 ring-primary shadow-xl">
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-on-primary text-[10px] font-bold tracking-widest uppercase px-4 py-1 rounded-full">
-                  가장 인기
-                </div>
-                <div className="text-sm font-bold text-primary tracking-widest uppercase mb-4">프로페셔널</div>
-                <div className="text-3xl font-bold mb-6">₩3,900 <span className="text-sm text-on-surface-variant font-normal">/ 월</span></div>
-                <ul className="text-left space-y-4 mb-8 flex-1">
-                  <li className="flex items-center gap-2 text-sm text-on-surface">
-                    <span className="material-symbols-outlined text-secondary text-lg">check_circle</span> 무제한 학급 관리
-                  </li>
-                  <li className="flex items-center gap-2 text-sm text-on-surface">
-                    <span className="material-symbols-outlined text-secondary text-lg">check_circle</span> AI 자동 재계획 시스템
-                  </li>
-                  <li className="flex items-center gap-2 text-sm text-on-surface">
-                    <span className="material-symbols-outlined text-secondary text-lg">check_circle</span> 시험범위 역산 도구
-                  </li>
-                  <li className="flex items-center gap-2 text-sm text-on-surface">
-                    <span className="material-symbols-outlined text-secondary text-lg">check_circle</span> 구글 클래스룸 연동
-                  </li>
-                </ul>
-                <Link
-                  href="/signup"
-                  className="w-full py-3 rounded-xl bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold shadow-md hover:opacity-90 transition-all text-center block"
-                >
-                  프로 무료 체험하기
-                </Link>
-              </div>
-
-              {/* 프리미엄 */}
-              <div className="bg-surface-container-lowest p-8 rounded-2xl flex flex-col">
-                <div className="text-sm font-bold text-primary tracking-widest uppercase mb-4">프리미엄</div>
-                <div className="text-3xl font-bold mb-6">₩7,900 <span className="text-sm text-on-surface-variant font-normal">/ 월</span></div>
-                <ul className="text-left space-y-4 mb-8 flex-1">
-                  <li className="flex items-center gap-2 text-sm text-on-surface-variant">
-                    <span className="material-symbols-outlined text-secondary text-lg">check_circle</span> 프로 기능 모두 포함
-                  </li>
-                  <li className="flex items-center gap-2 text-sm text-on-surface-variant">
-                    <span className="material-symbols-outlined text-secondary text-lg">check_circle</span> 교과 협의회 공동 협업 허브
-                  </li>
-                  <li className="flex items-center gap-2 text-sm text-on-surface-variant">
-                    <span className="material-symbols-outlined text-secondary text-lg">check_circle</span> 고급 분석 및 통계 리포트
-                  </li>
-                </ul>
-                <Link href="/signup" className="w-full py-3 rounded-xl border border-outline-variant/30 font-bold hover:bg-surface-container transition-all" >
-                  업그레이드 하세요
-                </Link>
-              </div>
-            </div>
-          </div>
+        {/* Final CTA */}
+        <section className="py-40 text-center">
+          <h2 className="text-5xl font-bold tracking-tight mb-10">
+            Design your class with<br />complete confidence.
+          </h2>
+          <a href="/signup" className="inline-block bg-[#0052FF] text-white px-10 py-4 rounded-lg font-bold text-lg hover:bg-blue-700 transition-all shadow-xl shadow-[#0052FF]/20">무료로 시작하기</a>
         </section>
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-12 border-t border-outline-variant/15 bg-surface-container-low">
-        <div className="max-w-7xl mx-auto px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-            <div className="col-span-2">
-              <div className="text-lg font-bold text-on-surface font-headline mb-4">클래스플로우</div>
-              <p className="text-on-surface-variant text-sm max-w-xs mb-6">
-                현대적인 교육자를 위해 설계된 지능형 학업 계획 도구입니다. 교육과정 관리는 단순하게, 교육의 영향력은 더 크게.
-              </p>
-            </div>
-            <div className="flex flex-col gap-3 font-label text-xs uppercase tracking-widest font-semibold">
-              <div className="text-on-surface mb-2">제품</div>
-              <a className="text-on-surface-variant hover:text-primary transition-colors" href="#">기능소개</a>
-              <a className="text-on-surface-variant hover:text-primary transition-colors" href="#">요금제</a>
-              <a className="text-on-surface-variant hover:text-primary transition-colors" href="#">커뮤니티</a>
-            </div>
-            <div className="flex flex-col gap-3 font-label text-xs uppercase tracking-widest font-semibold">
-              <div className="text-on-surface mb-2">고객지원</div>
-              <a className="text-on-surface-variant hover:text-primary transition-colors" href="#">고객센터</a>
-              <a className="text-on-surface-variant hover:text-primary transition-colors" href="#">접근성 안내</a>
-              <a className="text-on-surface-variant hover:text-primary transition-colors" href="#">이용약관</a>
+      <footer className="bg-black text-white pt-24 pb-12">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-5 gap-12 mb-20">
+          <div className="col-span-2 md:col-span-1">
+            <div className="text-xl font-bold mb-6">ClassFlow</div>
+            <p className="text-[#6B7280] text-xs leading-relaxed">선생님의 시간을 가치 있게.<br />AI 진도관리 플랫폼</p>
+          </div>
+          <div>
+            <h5 className="font-bold text-sm mb-6 uppercase tracking-widest">서비스</h5>
+            <div className="flex flex-col gap-4 text-[#6B7280] text-xs">
+              <a href="#features" className="hover:text-white transition-colors">기능 소개</a>
+              <a href="#pricing" className="hover:text-white transition-colors">요금제</a>
+              <a href="/dashboard" className="hover:text-white transition-colors">대시보드</a>
             </div>
           </div>
-
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-8 border-t border-outline-variant/10">
-            <p className="text-on-surface-variant font-label text-xs uppercase tracking-widest font-semibold">
-              © 2026 클래스플로우. 교육자를 위해 제작되었습니다.
-            </p>
-            <div className="flex gap-6 font-label text-xs uppercase tracking-widest font-semibold">
-              <a className="text-on-surface-variant hover:text-primary transition-colors" href="#">트위터</a>
-              <a className="text-on-surface-variant hover:text-primary transition-colors" href="#">링크드인</a>
-              <a className="text-on-surface-variant hover:text-primary transition-colors" href="#">개인정보처리방침</a>
+          <div>
+            <h5 className="font-bold text-sm mb-6 uppercase tracking-widest">계정</h5>
+            <div className="flex flex-col gap-4 text-[#6B7280] text-xs">
+              <a href="/login" className="hover:text-white transition-colors">로그인</a>
+              <a href="/signup" className="hover:text-white transition-colors">회원가입</a>
+              <a href="/dashboard/subscription" className="hover:text-white transition-colors">구독 관리</a>
+            </div>
+          </div>
+          <div>
+            <h5 className="font-bold text-sm mb-6 uppercase tracking-widest">회사</h5>
+            <div className="flex flex-col gap-4 text-[#6B7280] text-xs">
+              <a href="#" className="hover:text-white transition-colors">서비스 소개</a>
+              <a href="/terms" className="hover:text-white transition-colors">이용약관</a>
             </div>
           </div>
         </div>
+        <div className="max-w-7xl mx-auto px-6 pt-12 border-t border-white/10 flex flex-col md:flex-row justify-between gap-8 items-center text-[10px] text-[#6B7280] font-bold uppercase tracking-widest">
+          <span>© 2026 ClassFlow. All rights reserved.</span>
+          <div className="flex gap-10">
+            <a href="#" className="hover:text-white transition-colors">개인정보처리방침</a>
+            <a href="/terms" className="hover:text-white transition-colors">이용약관</a>
+          </div>
+        </div>
       </footer>
-    </div>
+    </>
   )
 }
