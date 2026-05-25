@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const supabase = await createClient()
-    const { error } = await supabase.from('profiles').select('id').limit(1)
+    const { error } = await supabase.from('subscriptions').select('id').limit(1)
     if (error) throw error
     return NextResponse.json({ ok: true })
   } catch (err) {
