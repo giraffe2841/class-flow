@@ -5,7 +5,7 @@ export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl
 
   // 인증 불필요 경로
-  const publicPaths = ['/login', '/signup', '/auth/callback']
+  const publicPaths = ['/login', '/signup', '/auth/callback', '/api/health', '/health']
   if (publicPaths.some(p => pathname.startsWith(p))) {
     return NextResponse.next()
   }
