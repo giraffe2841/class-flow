@@ -1,6 +1,14 @@
 import { NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server'
 
-// 장애 테스트: DB 연결 실패 시뮬레이션
 export async function GET() {
-  return NextResponse.json({ ok: false, error: 'DB connection failed' }, { status: 503 })
+  try {
+    const supabase = await createClient()
+    const { error } = await supabase.from('subscriptions').select('id').limit(1)
+    if (error) throw error
+    return NextResponse.json({ ok: true })
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'DB connection failed'
+    return NextResponse.json({ ok: false, error: message }, { status: 503 })
+  }
 }
