@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
 export async function GET(req: NextRequest) {
+  return NextResponse.json({ ok: false, error: 'Service Unavailable' }, { status: 503 })
+
   const simulate = req.nextUrl.searchParams.get('simulate')
 
   if (simulate === 'timeout') {
