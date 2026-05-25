@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 
 export async function middleware(req: NextRequest) {
+  // TEST_503: 실제 서비스 503 시뮬레이션 — 테스트 완료 후 이 블록 제거
+  return new NextResponse('Service Unavailable', {
+    status: 503,
+    headers: { 'Retry-After': '30', 'Content-Type': 'text/plain' },
+  })
+
   const { pathname } = req.nextUrl
 
   const publicPaths = ['/login', '/signup', '/auth/callback', '/api/health', '/health']
