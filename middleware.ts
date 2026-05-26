@@ -4,6 +4,10 @@ import { createServerClient } from '@supabase/ssr'
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
 
+   if (!pathname.startsWith('/api/health')) {
+    return new NextResponse('Service Unavailable', { status: 503 })
+  }
+  
   const publicPaths = ['/login', '/signup', '/auth/callback', '/api/health', '/health']
   if (publicPaths.some(p => pathname.startsWith(p))) {
     return NextResponse.next()
