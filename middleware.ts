@@ -4,6 +4,12 @@ import { createServerClient } from '@supabase/ssr'
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
 
+  // OBSTACLE 테스트용: 전체 서비스 다운 시뮬레이션
+  return NextResponse.json(
+    { ok: false, error: 'Service temporarily unavailable' },
+    { status: 503 }
+  )
+
   const publicPaths = ['/login', '/signup', '/auth/callback', '/api/health', '/health']
   if (publicPaths.some(p => pathname.startsWith(p))) {
     return NextResponse.next()
